@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parquet Viewer</title>
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <div class="side-head">
+        <span class="brand">Parquet Viewer</span>
+      </div>
+      <div class="side-section">
+        <div class="side-title">
+          <span>列 <b id="colCount">0</b></span>
+          <span class="links"><a href="#" id="colAll">全選択</a><a href="#" id="colNone">解除</a></span>
+        </div>
+        <input id="colFilter" class="input" type="search" placeholder="列名で絞り込み" />
+      </div>
+      <ul id="colList"></ul>
+      <dl id="meta"></dl>
+    </aside>
+
+    <main id="main">
+      <div id="tabs">
+        <div id="tabList"></div>
+        <button id="addSource" class="btn ghost" title="ファイルを追加">＋ 開く</button>
+        <button id="addUrl" class="btn ghost" title="URLから開く">URL</button>
+        <input id="fileInput" type="file" accept=".parquet,.geoparquet,.pq" multiple hidden />
+      </div>
+
+      <div id="toolbar">
+        <div class="seg" id="modeSeg">
+          <button data-mode="table" class="on">テーブル</button>
+          <button data-mode="sql">SQL</button>
+          <button data-mode="profile">プロファイル</button>
+          <button data-mode="chart">グラフ</button>
+          <button data-mode="map">地図</button>
+        </div>
+        <form id="searchForm" class="search">
+          <input id="searchBox" class="input" type="search" placeholder="全列を部分一致検索" />
+          <button class="btn">検索</button>
+        </form>
+        <div class="export">
+          <select id="exportFmt" class="input">
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+            <option value="parquet">Parquet</option>
+            <option value="geojson">GeoJSON</option>
+          </select>
+          <button id="exportBtn" class="btn">エクスポート</button>
+        </div>
+      </div>
+
+      <div id="sqlPane" class="pane" hidden>
+        <textarea id="sqlBox" spellcheck="false"></textarea>
+        <div class="sql-actions">
+          <button id="runSql" class="btn primary">実行 (Ctrl+Enter)</button>
+          <button id="resetSql" class="btn">SQLを解除</button>
+          <span class="hint">テーブル名はタブ名（data1, data2 …）。SELECT結果は下の表と地図・エクスポートに反映されます。</span>
+        </div>
+      </div>
+
+      <div id="views">
+        <div id="drop" class="view">
+          <div class="drop-box">
+            <p class="drop-title">Parquet / GeoParquet ファイルをここにドロップ</p>
+            <p>またはクリックして選択。ファイルはブラウザ内（DuckDB-WASM）で処理され、サーバーには送信されません。</p>
+          </div>
+        </div>
+        <div id="tableView" class="view" hidden>
+          <div id="grid"><div id="gridHead"></div><div id="gridBody"><div id="gridSpacer"></div><div id="gridRows"></div></div></div>
+        </div>
+        <div id="profileView" class="view scroll" hidden></div>
+        <div id="chartView" class="view scroll" hidden>
+          <div class="chart-ctl">
+            <label>列 <select id="chartCol" class="input"></select></label>
+            <label>件数 <select id="chartN" class="input"><option>10</option><option selected>20</option><option>50</option></select></label>
+          </div>
+          <div id="chartArea"></div>
+        </div>
+        <div id="mapView" class="view" hidden>
+          <div id="map"></div>
+          <div class="map-ctl">
+            <label>ジオメトリ列 <select id="geomCol" class="input"></select></label>
+            <label>最大件数 <select id="geomLimit" class="input"><option>5000</option><option selected>20000</option><option>100000</option></select></label>
+            <label>背景 <select id="baseMap" class="input">
+              <option value="pale">地理院 淡色</option>
+              <option value="std">地理院 標準</option>
+              <option value="photo">地理院 写真</option>
+            </select></label>
+            <span id="mapInfo"></span>
+          </div>
+        </div>
+      </div>
+
+      <footer id="status">
+        <form id="jumpForm"><input id="jumpRow" class="input" type="number" min="1" placeholder="行番号" /><button class="btn">移動</button></form>
+        <span class="jumps"><a href="#" data-p="0.25">25%</a><a href="#" data-p="0.5">50%</a><a href="#" data-p="0.75">75%</a><a href="#" data-p="1">末尾</a></span>
+        <span id="statusText">DuckDB を起動中…</span>
+      </footer>
+    </main>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
