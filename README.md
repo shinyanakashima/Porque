@@ -1,6 +1,6 @@
 # Parquet Viewer
 
-ブラウザだけで Parquet / GeoParquet を開いて確認するための社内ツール。
+ブラウザだけで Parquet / GeoParquet を開いて確認するViewer。
 ファイルは DuckDB-WASM でブラウザ内処理し、サーバーへは送信しない。
 
 ## 機能
@@ -33,7 +33,7 @@ npm run dev
 ビルド時に DuckDB の拡張を同梱するため、公開後は extensions.duckdb.org への通信なしで動作する。
 背景地図のみ国土地理院のタイルサーバーへアクセスする。
 
-## 制約
+## 備忘
 
 - ジオメトリは WKB（BLOB）のみ対応。GeoArrow エンコーディングや DuckDB GEOMETRY 型は未対応
 - 地図は経緯度（EPSG:4326 / CRS84）を前提とする。平面直角座標系などは事前に変換が必要
